@@ -8,15 +8,17 @@
 #include "QTimer"
 #include "QKeyEvent"
 #include "QCoreApplication"
+#include "QGuiApplication"
+#include "QScreen"
+#include "QRect"
 
 class MainView : public QGraphicsView
 {
     Q_OBJECT
     QGraphicsScene *scene;
-    QGraphicsRectItem *rect;
 
 public:
-    explicit MainView(QWidget *p = nullptr) : QGraphicsView(p), scene(nullptr), rect(nullptr)
+    explicit MainView(QWidget *p = nullptr) : QGraphicsView(p), scene(nullptr)
     {
         this->setWindowTitle("Blend Viewer");
         this->setBackgroundBrush(Qt::black);
@@ -27,9 +29,15 @@ public:
         QGraphicsScene *scene = new QGraphicsScene(0, 0, w, h, this);
         scene->setBackgroundBrush(Qt::black);
         this->setScene(scene);
-        this->fitInView(scene->itemsBoundingRect(), Qt::IgnoreAspectRatio);
+
+        QScreen *screen = QGuiApplication::primaryScreen();
+        QRect screenGeometry = screen->geometry();
+        int screenW = screenGeometry.width();
+        int screenH = screenGeometry.height();
+        this->setGeometry((screenW / 2) - (w / 2), (screenH / 2) - (h / 2), w, h);
 
 
+//        QGraphicsRectItem *rect = scene->addRect(0, 0, w, h, QPen(Qt::cyan), QBrush(Qt::red));
     }
 
 protected:
