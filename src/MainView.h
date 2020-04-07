@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef MAIN_VIEW_H
+#define MAIN_VIEW_H
 
 #include "QGraphicsScene"
 #include "QGraphicsRectItem"
@@ -42,4 +42,4 @@ private slots:
 };
 
 
-#endif // MAIN_H
+#endif // MAIN_VIEW_H
