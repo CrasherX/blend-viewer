@@ -1,20 +1,28 @@
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#include "main.h"
+#include "QApplication"
+
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication app(argc, argv);
 
-    QGuiApplication app(argc, argv);
+    MainView mainView;
+    mainView.show();
 
-    QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
-    engine.load(url);
+//    QGraphicsView *view = new QGraphicsView();
+//    view->setWindowTitle("Blend Viewer");
+//    view->setBackgroundBrush(Qt::darkCyan);
+//    view->resize(500, 500);
+//    view->show();
+
+//    QGraphicsScene *scene = new QGraphicsScene(0, 0, 400, 400, view);
+//    scene->setBackgroundBrush(Qt::black);
+//    view->setScene(scene);
+
+//    QGraphicsRectItem *rect = scene->addRect(0, 0, 400, 400, QPen(Qt::white), QBrush(Qt::black));
+
+
+
 
     return app.exec();
 }
