@@ -1,11 +1,13 @@
 #ifndef MAIN_VIEW_H
 #define MAIN_VIEW_H
 
+#include "iostream"
 #include "QGraphicsScene"
 #include "QGraphicsRectItem"
 #include "QGraphicsView"
 #include "QTimer"
-#include "iostream"
+#include "QKeyEvent"
+#include "QCoreApplication"
 
 class MainView : public QGraphicsView
 {
@@ -17,29 +19,27 @@ public:
     explicit MainView(QWidget *p = nullptr) : QGraphicsView(p), scene(nullptr), rect(nullptr)
     {
         this->setWindowTitle("Blend Viewer");
-        this->setBackgroundBrush(Qt::darkCyan);
-        this->resize(500, 500);
+        this->setBackgroundBrush(Qt::black);
+        this->setStyleSheet("border: 0px;");
 
-
-        QGraphicsScene *scene = new QGraphicsScene(0, 0, 400, 400, this);
-        this->setScene(scene);
-
+        qreal w = 854;
+        qreal h = 480;
+        QGraphicsScene *scene = new QGraphicsScene(0, 0, w, h, this);
         scene->setBackgroundBrush(Qt::black);
+        this->setScene(scene);
+        this->fitInView(scene->itemsBoundingRect(), Qt::IgnoreAspectRatio);
 
-
-        rect = scene->addRect(0, 0, 400, 400, QPen(Qt::white), QBrush(Qt::black));
-
-        QTimer::singleShot(2500, this, &MainView::moveItem);
 
     }
 
-
-private slots:
-    void moveItem()
-    {
-        rect->setBrush(QBrush(Qt::white));
-    }
+protected:
+     void keyPressEvent(QKeyEvent *event) override
+     {
+         if (event->key() == Qt::Key_Escape)
+         {
+             QCoreApplication::quit();
+         }
+     }
 };
-
 
 #endif // MAIN_VIEW_H
