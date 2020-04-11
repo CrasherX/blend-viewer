@@ -31,6 +31,10 @@ typedef struct {
     std::vector<MVert> mverts;
 } Mesh;
 
+typedef struct {
+    std::vector<Mesh> meshes;
+} Model;
+
 template <typename K, typename V>
 void printMap(std::map<K, V> map)
 {
@@ -39,9 +43,9 @@ void printMap(std::map<K, V> map)
     }
 }
 
-void loadModel(void)
+Model loadModel(const char* filename)
 {
-    std::ifstream input("../models/smiltis.blend", std::ifstream::binary);
+    std::ifstream input(filename, std::ifstream::binary);
     kaitai::kstream ks(&input);
     blender_blend_t blend(&ks);
     uint8_t pointer_size = (uint8_t)blend.hdr()->psize();
@@ -227,6 +231,10 @@ void loadModel(void)
             std::cout << "Edge " << medge.v1 << " " << medge.v2 << std::endl;
         }
     }
+
+    Model model;
+    model.meshes = meshes;
+    return model;
 }
 
 int main(int argc, char* argv[])
@@ -235,7 +243,14 @@ int main(int argc, char* argv[])
     MainView mainView;
     mainView.show();
 
-    loadModel();
+    Model model = loadModel("../models/smiltis.blend");
+    for (auto mesh : model.meshes) {
+        for (auto edge : mesh.medges) {
+            MVert vert1 = mesh.mverts.at(edge.v1);
+            MVert vert2 = mesh.mverts.at(edge.v2);
+            mainView.addLine(vert1.co[0], vert1.co[1], vert2.co[0], vert2.co[1], QPen(Qt::white));
+        }
+    }
 
     return app.exec();
 }
